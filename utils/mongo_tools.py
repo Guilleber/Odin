@@ -1,5 +1,7 @@
 from typing import List, Union
-from .exif_tools import getMetadata
+from tqdm import tqdm
+
+from .metadata_tools import getMetadata
 
 import pymongo
 import os
@@ -36,11 +38,21 @@ class MongoInterface:
                 file_list.append(path)
             else:
                 for root, _, files in os.walk(path):
-                    for name in files:
-                        file_list.append(os.path.join(root, name))
+                    for filename in files:
+                        file_list.append(os.path.join(root, filename))
 
-        metadata = getMetadata(file_list)
+        print("Adding {} files...".format(len(file_list)))
 
-        self.collection.insert_many(metadata, ordered=False)
+        skipped = 0
+
+        for file in tqdm(file_list):
+            metadata = getMetadata(file)[0]
+
+            try:
+                self.collection.insert_one(metadata)
+            except:
+                skipped += 1
+
+        print("Finished: {} added, {} skipped".format(len(file_list) - skipped, skipped))
         
         
