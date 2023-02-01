@@ -1,5 +1,6 @@
-from typing import List, Union
+from typing import List, Dict, Union, Any
 from tqdm import tqdm
+from pprint import pprint
 
 from .metadata_tools import getMetadata
 
@@ -20,8 +21,8 @@ class MongoInterface:
 
 
     def config(self):
-        self.collection.create_index([("Directory", pymongo.ASCENDING),
-            ("FileName", pymongo.ASCENDING)], unique=True)
+        self.collection.create_index([("directory", pymongo.ASCENDING),
+            ("filename", pymongo.ASCENDING)], unique=True)
 
 
     def add(self, paths: Union[str, List[str]]) -> None:
@@ -46,13 +47,58 @@ class MongoInterface:
         skipped = 0
 
         for file in tqdm(file_list):
-            metadata = getMetadata(file)[0]
+            metadata = getMetadata(file)
 
             try:
                 self.collection.insert_one(metadata)
-            except:
+            except Exception as e:
                 skipped += 1
 
         print("Finished: {} added, {} skipped".format(len(file_list) - skipped, skipped))
         
-        
+    
+    def _find(self, query: Dict[str, Any]) -> List[Dict[str, Any]]:
+        return list(self.collection.find(query))
+
+
+    def find(self, query: Dict[str, Any]) -> None:
+        results = self._find(query)
+
+        print("Found {} files...".format(len(results)))
+
+        pprint(results)
+
+
+    def _move(self, entry: Dict[str, Any], dest: str, on_exists='rename') -> None:
+        if entry['directory'] == dest:
+            return
+
+        filename = entry['filename']
+
+        if on_exists == 'replace':
+            self.collection.delete_one({'directory': dest, 'filename': filename})
+        elif on_exists == 'rename':
+            if os.path.exists(os.path.join(dest, filename)):
+                num = 1
+                name, ext = filename.split('.', 1)
+                filename_temp = name + "-{}." + ext
+                filename = filename_temp.format(num)
+
+                while os.path.exists(os.path.join(dest, filename)):
+                    num += 1
+                    filename = filename_temp.format(num)
+        else:
+            raise ValueError("Invalid value '{}' for argument on_exist".format(on_exists))
+
+        os.rename(os.path.join(entry['directory'], entry['filename']), os.path.join(dest, filename))
+        self.collection.update_one({'_id': entry['_id']}, {'$set': {'directory': dest, 'filename': filename}})
+
+
+    def move(self, query: Dict[str, Any], dest: str) -> None:
+        results = self._find(query)
+        dest = os.path.abspath(dest)
+
+        print("Moving {} files to {}".format(len(results), dest))
+
+        for entry in tqdm(results):
+            self._move(entry, dest)
