@@ -13,6 +13,12 @@ DATABASE_NAME = "PhotoStorage"
 DEFAULT_COLLECTION_NAME = "Default"
 
 
+ON_EXISTS_VALUES = [
+    'rename',
+    'replace'
+]
+
+
 def batch(iterable, n=1):
     l = len(iterable)
     for ndx in range(0, l, n):
@@ -108,11 +114,11 @@ class MongoInterface:
         self.collection.update_one({'_id': entry['_id']}, {'$set': {'directory': dest, 'filename': filename}})
 
 
-    def move(self, query: Dict[str, Any], dest: str) -> None:
+    def move(self, query: Dict[str, Any], dest: str, **kwargs) -> None:
         results = self._find(query)
         dest = os.path.abspath(dest)
 
         print("Moving {} files to {}".format(len(results), dest))
 
         for entry in tqdm(results):
-            self._move(entry, dest)
+            self._move(entry, dest, **kwargs)
