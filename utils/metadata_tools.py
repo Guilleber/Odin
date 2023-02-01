@@ -29,13 +29,7 @@ def getExif(filepath: Union[str, List[str]]) -> List[Dict[str, Any]]:
     return et.get_metadata(filepath)
 
 
-def getExifMeta(filepath: str) -> Dict[str, Any]:
-
-    try:
-        exif = getExif(filepath)[0]
-    except:
-        return {}
-
+def _extractExif(exif: Dict[str, Any]) -> Dict[str, Any]:
     metas = {META_NAME_MAP[k]: META_TYPE[k](exif[k]) for k in META_NAME_MAP if k in exif}
 
     if 'EXIF:Make' in exif and 'EXIF:Model' in exif:
@@ -47,16 +41,30 @@ def getExifMeta(filepath: str) -> Dict[str, Any]:
     return metas
 
 
-def getFileMeta(filepath: str) -> Dict[str, Any]:
+def getExifMeta(filepaths: List[str]) -> List[Dict[str, Any]]:
+
+    try:
+        exif = getExif(filepaths)
+    except:
+        return [{} for _ in filepaths]
+    
+    return [_extractExif(e) for e in exif]
+
+
+def _getFileMeta(filepath: str) -> Dict[str, Any]:
     metas = dict()
 
     directory, filename = os.path.split(filepath)
     metas['filename'] = filename
-    metas['directory'] = directory
+    metas['directory'] = os.path.abspath(directory)
 
     metas['date'] = datetime.fromtimestamp(os.path.getmtime(filepath))
 
     return metas
+
+
+def getFileMeta(filepaths: List[str]) -> List[Dict[str, Any]]:
+    return [_getFileMeta(f) for f in filepaths]
 
 
 META_FUNC = [
@@ -65,13 +73,17 @@ META_FUNC = [
 ]
 
 
-def getMetadata(filepath: str) -> Dict[str, Any]:
-    metas = dict()
+def getMetadata(filepaths: List[str]) -> List[Dict[str, Any]]:
+    metas = [dict() for _ in filepaths]
 
     for getMeta in META_FUNC:
-        metas.update(getMeta(filepath))
+        new_metas = getMeta(filepaths)
 
-    metas['date_added'] = datetime.now()
+        for i in range(len(filepaths)):
+            metas[i].update(new_metas[i])
+
+    for i in range(len(filepaths)):
+        metas[i]['date_added'] = datetime.now()
 
     return metas
         

@@ -6,10 +6,17 @@ from .metadata_tools import getMetadata
 
 import pymongo
 import os
+import sys
 
 
 DATABASE_NAME = "PhotoStorage"
 DEFAULT_COLLECTION_NAME = "Default"
+
+
+def batch(iterable, n=1):
+    l = len(iterable)
+    for ndx in range(0, l, n):
+        yield iterable[ndx:min(ndx + n, l)]
 
 
 class MongoInterface:
@@ -46,13 +53,20 @@ class MongoInterface:
 
         skipped = 0
 
-        for file in tqdm(file_list):
-            metadata = getMetadata(file)
+        progbar = tqdm(total=len(file_list), file=sys.stdout)
+        for files in batch(file_list, 10):
+            metadata = getMetadata(files)
+            
+            for m in metadata:
+                try:
+                    self.collection.insert_one(m)
+                except Exception as e:
+                    skipped += 1
 
-            try:
-                self.collection.insert_one(metadata)
-            except Exception as e:
-                skipped += 1
+            progbar.update(len(files))
+            progbar.refresh()
+
+        progbar.close()
 
         print("Finished: {} added, {} skipped".format(len(file_list) - skipped, skipped))
         
