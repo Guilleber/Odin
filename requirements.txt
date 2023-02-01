@@ -1,0 +1,8 @@
+dnspython==2.3.0
+JSON-Datetime==0.0.6
+PyExifTool==0.5.5
+pymongo==4.3.3
+simplejson==3.18.1
+snakeviz==2.1.1
+tornado==6.2
+tqdm==4.64.1
