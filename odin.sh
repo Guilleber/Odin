@@ -15,6 +15,9 @@ case $VERB in
 	add)
 		$LOCAL_PATH/venv/bin/python3 $LOCAL_PATH/add.py "$@"
 		;;
+	remove|rm)
+		$LOCAL_PATH/venv/bin/python3 $LOCAL_PATH/remove.py "$@"
+		;;
 	find)
 		$LOCAL_PATH/venv/bin/python3 $LOCAL_PATH/find.py "$@"
 		;;

@@ -75,6 +75,11 @@ class MongoInterface:
         progbar.close()
 
         print("Finished: {} added, {} skipped".format(len(file_list) - skipped, skipped))
+
+
+    def remove(self, query: Dict[str, Any]) -> None:	
+        res = self.collection.delete_many(query)
+        print("{} files removed".format(res.deleted_count))
         
     
     def _find(self, query: Dict[str, Any]) -> List[Dict[str, Any]]:
