@@ -12,3 +12,9 @@ The possible operations include moving or copying file that match a specific que
 to a destination directory.
 
 ## Installation
+
+To use Odin, you first need to install MongoDB. To do so, please follow the instructions on the official [MongoDB website](https://www.mongodb.com/docs/manual/installation/).
+
+Then simply install the package using pip as follows:
+
+    python3 -m pip install git+https://github.com/Guilleber/Odin.git@main
