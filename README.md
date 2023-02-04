@@ -11,6 +11,11 @@ The indexed files can then be listed and manipulated using MongoDB style queries
 The possible operations include moving or copying file that match a specific query
 to a destination directory.
 
+## Disclaimer
+
+This project is still in a work in progress state. I strongly advise against using it
+on any not backed up data as it may contains bugs that could damage or erase your data.
+
 ## Installation
 
 To use Odin, you first need to install MongoDB. To do so, please follow the instructions on the official [MongoDB website](https://www.mongodb.com/docs/manual/installation/).
