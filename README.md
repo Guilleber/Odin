@@ -17,4 +17,4 @@ To use Odin, you first need to install MongoDB. To do so, please follow the inst
 
 Then simply install the package using pip as follows:
 
-    python3 -m pip install git+https://github.com/Guilleber/Odin.git@main
+    python3 -m pip install git+https://github.com/Guilleber/Odin.git
