@@ -56,4 +56,4 @@ Similarly to the rm command, one can print a set of documents matching a given q
 
 You can move files by using:
 
-    odin mv [-c | --collection <collection-name>] [--on-exists (replace|remove)] <query> <destination>
+    odin mv [-c | --collection <collection-name>] [--on-exists (replace|rename)] <query> <destination>
