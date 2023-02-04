@@ -29,7 +29,7 @@ Every time you want to use Odin, you first need to start the MongoDB server.
 
 You can then initialize a new collection.
 
-    odin init [--collection <collection-name>]
+    odin init [-c | --collection <collection-name>]
 
 If no *collection-name* is provided, Odin will initialize a new collection with a default name.
 This holds true for other commands as well and if you do not specify a *collection-name*,
@@ -39,15 +39,21 @@ the command will apply on the default collection.
 
 You can add new files to the index using:
 
-    odin add [--collection <collection-name>] <path>...
+    odin add [-c | --collection <collection-name>] <path>...
 
 where *path* can be a file, a directory and/or a regex. When a directory is provided,
 Odin will index all the files in that directory including all subdirectories.
 
 Indexed files can be removed using a MongoDB style query.
 
-    odin rm [--collection <collection-name>] <query>
+    odin rm [-c | --collection <collection-name>] <query>
 
 Similarly to the rm command, one can print a set of documents matching a given query.
 
-    odin find [--collection <collection-name>] <query>
+    odin find [-c | --collection <collection-name>] <query>
+
+### File Manipulation
+
+You can move files by using:
+
+    odin mv [-c | --collection <collection-name>] [--on-exists (replace|remove)] <query> <destination>
