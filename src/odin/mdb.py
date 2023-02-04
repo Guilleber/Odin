@@ -50,20 +50,13 @@ class MongoInterface:
 
         skipped = 0
 
-        progbar = tqdm(total=len(file_list), file=sys.stdout)
-        for files in batch(file_list, 10):
-            metadata = getMetadata(files)
+        for file in tqdm(file_list, file=sys.stdout):
+            metadata = getMetadata(file)
             
-            for m in metadata:
-                try:
-                    self.collection.insert_one(m)
-                except Exception as e:
-                    skipped += 1
-
-            progbar.update(len(files))
-            progbar.refresh()
-
-        progbar.close()
+            try:
+                self.collection.insert_one(metadata)
+            except Exception as e:
+                skipped += 1
 
         print("Finished: {} added, {} skipped".format(len(file_list) - skipped, skipped))
 
