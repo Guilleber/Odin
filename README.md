@@ -65,7 +65,7 @@ You can move files by using:
 
 This command will move all files matching *query* to the directory *destination*.
 
-### Exemples
+### Examples
 
 Add files to index
 
