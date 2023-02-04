@@ -57,3 +57,25 @@ Similarly to the rm command, one can print a set of documents matching a given q
 You can move files by using:
 
     odin mv [-c | --collection <collection-name>] [--on-exists (replace|rename)] <query> <destination>
+
+This command will move all files matching *query* to the directory *destination*.
+
+### Exemples
+
+* Add files to index
+
+    odin add ~/Photos/Japan
+    odin add /home/user/Photos/DSCF6421.RAF
+    odin add ../Photos/*.JPG
+
+* Show all indexed jpeg files
+
+    odin find '{"filename": {"$regex": ".JPG$"}}'
+
+* Remove all files in a directory from the index
+
+    odin rm '{"directory": {"$regex": "^/home/user/Photos/Japan"}}'
+
+* Move all photos taken with an ISO of less than 500 to a specific directory
+
+    odin mv '{"iso": {"$lte": 500}}' ./HighQuality
