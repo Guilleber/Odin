@@ -31,8 +31,8 @@ You can then initialize a new collection.
 
     odin init [--collection <collection-name>]
 
-If no <collection-name> is provided, Odin will initialize a new collection with a default name.
-This holds true for other commands as well and if you do not specify a <collection-name>,
+If no *collection-name* is provided, Odin will initialize a new collection with a default name.
+This holds true for other commands as well and if you do not specify a *collection-name*,
 the command will apply on the default collection.
 
 ### Adding, removing and finding files
@@ -41,7 +41,7 @@ You can add new files to the index using:
 
     odin add [--collection <collection-name>] <path>...
 
-where <path> can be a file, a directory and/or a regex. When a directory is provided,
+where *path* can be a file, a directory and/or a regex. When a directory is provided,
 Odin will index all the files in that directory including all subdirectories.
 
 Indexed files can be removed using a MongoDB style query.
