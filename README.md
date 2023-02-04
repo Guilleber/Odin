@@ -39,15 +39,15 @@ the command will apply on the default collection.
 
 You can add new files to the index using:
 
-    odin add <path>... [--collection <collection-name>]
+    odin add [--collection <collection-name>] <path>...
 
 where <path> can be a file, a directory and/or a regex. When a directory is provided,
 Odin will index all the files in that directory including all subdirectories.
 
 Indexed files can be removed using a MongoDB style query.
 
-    odin rm <query> [--collection <collection-name>]
+    odin rm [--collection <collection-name>] <query>
 
 Similarly to the rm command, one can print a set of documents matching a given query.
 
-    odin find <query> [--collection <collection-name>]
+    odin find [--collection <collection-name>] <query>
