@@ -64,18 +64,18 @@ This command will move all files matching *query* to the directory *destination*
 
 * Add files to index
 
-    odin add ~/Photos/Japan
-    odin add /home/user/Photos/DSCF6421.RAF
-    odin add ../Photos/*.JPG
+        odin add ~/Photos/Japan
+        odin add /home/user/Photos/DSCF6421.RAF
+        odin add ../Photos/*.JPG
 
 * Show all indexed jpeg files
 
-    odin find '{"filename": {"$regex": ".JPG$"}}'
+        odin find '{"filename": {"$regex": ".JPG$"}}'
 
 * Remove all files in a directory from the index
 
-    odin rm '{"directory": {"$regex": "^/home/user/Photos/Japan"}}'
+        odin rm '{"directory": {"$regex": "^/home/user/Photos/Japan"}}'
 
 * Move all photos taken with an ISO of less than 500 to a specific directory
 
-    odin mv '{"iso": {"$lte": 500}}' ./HighQuality
+        odin mv '{"iso": {"$lte": 500}}' ./HighQuality
